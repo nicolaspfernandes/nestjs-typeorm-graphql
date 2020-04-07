@@ -1,14 +1,16 @@
 import {
   Entity,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
+  OneToMany,
+  JoinColumn,
   PrimaryGeneratedColumn
 } from 'typeorm'
 
+import { Post } from '../post/post.entity'
+import { ParanoidEntity } from '../helper/entities/ParanoidEntity'
+
 @Entity({ name: 'users' })
-export class User {
+export class User extends ParanoidEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
@@ -18,12 +20,7 @@ export class User {
   @Column({ name: 'last_name' })
   lastName: string
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
-  createdAt: Date
-
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', nullable: true })
-  updatedAt?: Date
-
-  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
-  deletedAt?: Date
+  @JoinColumn({ name: 'user_id' })
+  @OneToMany(type => Post, post => post.user)
+  posts?: Post[]
 }

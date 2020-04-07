@@ -1,8 +1,10 @@
-import { Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
+import { Repository, UpdateResult } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import { User } from './models/user.model'
+import { User } from './user.entity'
+import { UserInput } from './models/user.input'
+import { UserOutput } from './models/user.output'
 
 @Injectable()
 export class UserService {
@@ -11,17 +13,37 @@ export class UserService {
     private readonly userRepository: Repository<User>
   ) { }
 
-  saveUser(user: User) : Promise<User> {
-    return this.userRepository.save(user)
+  private mapInputToUser(userInput: UserInput): User {
+    return {
+      id: userInput.id,
+      lastName: userInput.lastName,
+      firstName: userInput.firstName
+    } as User
   }
 
-  async deleteUserById(userId: string) : Promise<Boolean> {
-    const { affected } = await this.userRepository.softDelete(userId)
-
-    return affected! > 0
+  private mapUserToOutput(user: User): UserOutput {
+    return {
+      id: user.id,
+      lastName: user.lastName,
+      firstName: user.firstName,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    } as UserOutput
   }
 
-  getAllUsers() : Promise<User[]> {
-    return this.userRepository.find()
-  }  
+  async saveUser(userInput: UserInput): Promise<UserOutput> {
+    const user = await this.userRepository.save(this.mapInputToUser(userInput))
+
+    return this.mapUserToOutput(user)
+  }
+
+  deleteUserById(userId: string): Promise<UpdateResult> {
+    return this.userRepository.softDelete(userId)
+  }
+
+  async getAllUsers(): Promise<UserOutput[]> {
+    const users = await this.userRepository.find()
+
+    return users.map(this.mapUserToOutput)
+  }
 }
