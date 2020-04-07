@@ -17,6 +17,15 @@ These commands will make the application ready to run under the port number is c
 
 ---
 
+### **Running from a container**
+
+- Install `Docker engine` and `Docker compose` as dependencies for a containerized application.
+- `docker compose up`
+
+This will create a container for a MySQL instance and for your web application.
+
+---
+
 ### **Running**
 
 You can run the service by accessing GraphQL's playground from a browser windows. You simply need to type: `http://localhost:<PORT_NUMBER>/graphql` and you will see the playground.
