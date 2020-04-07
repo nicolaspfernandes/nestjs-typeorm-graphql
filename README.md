@@ -20,7 +20,7 @@ These commands will make the application ready to run under the port number is c
 ### **Running from a container**
 
 - Install `Docker engine` and `Docker compose` as dependencies for a containerized application.
-- `docker compose up`
+- `docker-compose up`
 
 This will create a container for a MySQL instance and for your web application.
 
