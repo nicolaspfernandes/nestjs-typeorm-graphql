@@ -1,12 +1,28 @@
-import { ID, Args, Resolver, Mutation } from '@nestjs/graphql'
+import {
+  ID,
+  Args,
+  Parent,
+  Resolver,
+  Mutation,
+  ResolveField
+} from '@nestjs/graphql'
 
 import { PostInput } from './models/post.input'
 import { PostService } from '../post/post.service'
 import { PostOutput } from '../post/models/post.output'
 
+import { UserService } from '../user/user.service'
+import { UserOutput } from '../user/models/user.output'
+
+import { LikeService } from '../like/like.service'
+
 @Resolver(PostOutput)
 export class PostResolver {
-  constructor(private readonly postService: PostService) { }
+  constructor(
+    private readonly postService: PostService,
+    private readonly likeService: LikeService,
+    private readonly userService: UserService
+  ) { }
 
   @Mutation(returns => PostOutput)
   async savePost(
@@ -23,5 +39,17 @@ export class PostResolver {
     await this.postService.deletePostById(postId)
 
     return true
+  }
+
+  @ResolveField()
+  async usersWhoLiked(@Parent() post: PostOutput): Promise<UserOutput[]> {
+    const likesForPost = await this.likeService.getlikesByPost(post.id)
+    const usersFromLikes = likesForPost.map(like => like.userId)
+
+    if (usersFromLikes.length === 0) {
+      return []
+    }
+
+    return this.userService.getUsersByIds(usersFromLikes)
   }
 }

@@ -8,8 +8,8 @@ import { PostOutput } from './models/post.output'
 export class PostMapper {
   mapInputToEntity(userId: string, postInput: PostInput): Post {
     return {
+      userId,
       id: postInput.id,
-      user: { id: userId },
       title: postInput.title,
       description: postInput.description
     } as Post

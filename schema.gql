@@ -7,11 +7,25 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input LikeInput {
+  postId: String!
+  userId: String!
+}
+
+type LikeOutput {
+  postId: String!
+  userId: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 type Mutation {
   saveUser(userInput: UserInput!): UserOutput!
   deleteUser(userId: ID!): Boolean!
   savePost(postInput: PostInput!, userId: ID!): PostOutput!
   deletePost(postId: ID!): Boolean!
+  likePost(likeInput: LikeInput!): LikeOutput!
+  unlikePost(unlikeInput: LikeInput!): LikeOutput!
 }
 
 input PostInput {
@@ -25,6 +39,8 @@ type PostOutput {
   title: String
   description: String
   createdAt: DateTime
+  updatedAt: DateTime
+  usersWhoLiked: [UserOutput]
 }
 
 type Query {
@@ -42,5 +58,7 @@ type UserOutput {
   id: ID!
   firstName: String
   lastName: String
+  createdAt: DateTime
+  updatedAt: DateTime
   posts: [PostOutput]
 }

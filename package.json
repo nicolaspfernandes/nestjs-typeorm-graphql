@@ -9,7 +9,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "start": "nest start",
+    "start": "npm run migrate && nest start",
     "migrate": "typeorm migration:run",
     "migrate:undo": "typeorm migration:revert"
   },

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { Repository, UpdateResult } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Repository, UpdateResult, In } from 'typeorm'
 
 import { User } from './user.entity'
 import { UserMapper } from './user.mapper'
@@ -25,9 +25,19 @@ export class UserService {
     return this.userRepository.softDelete(userId)
   }
 
+  private mapEntitiesToOutput(userEntities: User[]): UserOutput[] {
+    return userEntities.map(this.userMapper.mapEntityToOutput)
+  }
+
+  async getUsersByIds(userIds: string[] = []): Promise<UserOutput[]> {
+    const users = await this.userRepository.find({ where: { id: In(userIds) } })
+
+    return this.mapEntitiesToOutput(users)
+  }
+
   async getAllUsers(): Promise<UserOutput[]> {
     const users = await this.userRepository.find()
 
-    return users.map(this.userMapper.mapEntityToOutput)
+    return this.mapEntitiesToOutput(users)
   }
 }

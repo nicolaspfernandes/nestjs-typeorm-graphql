@@ -26,19 +26,21 @@ export class PostService {
   }
 
   deletePostsByUserId(userId: string): Promise<UpdateResult> {
-    return this.postRepository.softDelete({ user: { id: userId }})
+    return this.postRepository.softDelete({ userId })
   }
 
   deletePostById(postId: string): Promise<UpdateResult> {
     return this.postRepository.softDelete(postId)
   }
 
+  async getPostById(postId: string): Promise<PostOutput> {
+    const post = await this.postRepository.findOne(postId)
+
+    return this.postMapper.mapEntityToOutput(post!)
+  }
+
   async getPostsByUserId(userId: string): Promise<PostOutput[]> {
-    const posts = await this.postRepository.find({
-      where: {
-        user: { id: userId }
-      }
-    })
+    const posts = await this.postRepository.find({ where: { userId } })
 
     return posts.map(this.postMapper.mapEntityToOutput)
   }
