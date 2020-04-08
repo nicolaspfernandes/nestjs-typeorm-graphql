@@ -7,7 +7,7 @@ import {
 } from 'typeorm'
 
 import { Post } from '../post/post.entity'
-import { ParanoidEntity } from '../helper/entities/ParanoidEntity'
+import { ParanoidEntity } from '../helper/entities/paranoid.entity'
 
 @Entity({ name: 'users' })
 export class User extends ParanoidEntity {
