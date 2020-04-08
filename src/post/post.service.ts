@@ -3,45 +3,22 @@ import { Repository, UpdateResult } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { Post } from './post.entity'
+import { PostMapper } from './post.mapper'
 import { PostInput } from './models/post.input'
 import { PostOutput } from './models/post.output'
 
 @Injectable()
 export class PostService {
   constructor(
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>
+    private readonly postMapper: PostMapper,
+    @InjectRepository(Post) private readonly postRepository: Repository<Post>
   ) { }
-
-  private mapInputToPost(userId: string, postInput: PostInput): Post {
-    return {
-      id: postInput.id,
-      title: postInput.title,
-      description: postInput.description,
-      user: { id: userId }
-    } as Post
-  }
-
-  private mapPostToOutput(post: Post): PostOutput {
-    return {
-      id: post.id,
-      title: post.title,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
-      description: post.description
-    } as PostOutput
-  }
  
-  async savePostForUser(
-    userId: string,
-    postInput: PostInput
-  ): Promise<PostOutput> {
-    const post = await this.postRepository.save(this.mapInputToPost(
-      userId,
-      postInput
-    ))
+  async savePostForUser(userId: string, postInput: PostInput): Promise<PostOutput> {
+    const postEntity = this.postMapper.mapInputToEntity(userId, postInput)
+    const post = await this.postRepository.save(postEntity)
 
-    return this.mapPostToOutput(post)
+    return this.postMapper.mapEntityToOutput(post)
   }
 
   savePostsForUser(userId: string, posts: PostInput[]): Promise<PostOutput[]> {
@@ -63,6 +40,6 @@ export class PostService {
       }
     })
 
-    return posts.map(this.mapPostToOutput)
+    return posts.map(this.postMapper.mapEntityToOutput)
   }
 }
