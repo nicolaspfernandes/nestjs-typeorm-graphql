@@ -19,6 +19,9 @@ export class PostOutput {
   @Field({ nullable: true })
   updatedAt?: Date
 
+  @Field({ nullable: true })
+  numberOfLikes?: Number
+
   @Field(type => [UserOutput], { nullable: 'itemsAndList' })
   usersWhoLiked?: UserOutput[]
 }

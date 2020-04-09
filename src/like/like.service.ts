@@ -12,6 +12,10 @@ export class LikeService {
     @InjectRepository(Like) private readonly likeRepository: Repository<Like>
   ) { }
 
+  countLikesByPost(postId: string): Promise<Number> {
+    return this.likeRepository.count({ where: { postId } })
+  }
+
   likePostForUser({ postId, userId }: LikeInput): Promise<LikeOutput> {
     return this.likeRepository.save({ postId, userId })
   }
