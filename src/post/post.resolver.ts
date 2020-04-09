@@ -1,6 +1,7 @@
 import {
   ID,
   Args,
+  Query,
   Parent,
   Resolver,
   Mutation,
@@ -24,6 +25,13 @@ export class PostResolver {
     private readonly userService: UserService
   ) { }
 
+  @Query(returns => PostOutput)
+  post(
+    @Args('postId', { type: () => ID }) postId: string
+  ): Promise<PostOutput> {
+    return this.postService.getPostById(postId)
+  }
+
   @Mutation(returns => PostOutput)
   async savePost(
     @Args('userId', { type: () => ID }) userId: string,
@@ -39,6 +47,11 @@ export class PostResolver {
     await this.postService.deletePostById(postId)
 
     return true
+  }
+
+  @ResolveField()
+  async numberOfLikes(@Parent() post: PostOutput): Promise<Number> {
+    return this.likeService.countLikesByPost(post.id)
   }
 
   @ResolveField()

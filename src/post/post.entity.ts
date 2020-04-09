@@ -16,10 +16,10 @@ export class Post extends ParanoidEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
+  @Column({ length: 50 })
   title: string
 
-  @Column()
+  @Column('text')
   description: string
 
   @Column('uuid', { name: 'user_id' })
