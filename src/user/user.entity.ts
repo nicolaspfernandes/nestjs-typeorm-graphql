@@ -8,7 +8,7 @@ import {
 
 import { Post } from '../post/post.entity'
 import { Like } from '../like/like.entity'
-import { ParanoidEntity } from '../helper/entities/paranoid.entity'
+import { ParanoidEntity } from '../common/entity/paranoid.entity'
 
 @Entity({ name: 'users' })
 export class User extends ParanoidEntity {

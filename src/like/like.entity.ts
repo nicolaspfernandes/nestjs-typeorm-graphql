@@ -2,7 +2,7 @@ import { Entity, JoinColumn, PrimaryColumn, OneToMany } from 'typeorm'
 
 import { User } from '../user/user.entity'
 import { Post } from '../post/post.entity'
-import { ParanoidEntity } from '../helper/entities/paranoid.entity'
+import { ParanoidEntity } from '../common/entity/paranoid.entity'
 
 @Entity({ name: 'likes' })
 export class Like extends ParanoidEntity {
