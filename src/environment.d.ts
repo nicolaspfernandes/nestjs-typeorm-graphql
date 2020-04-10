@@ -11,6 +11,7 @@ declare global {
       TYPEORM_PORT: string
       TYPEORM_SYNCHRONIZE: string | 'true'
       TYPEORM_ENTITIES: string
+      JWT_SECRET: string
     }
   }
 }
