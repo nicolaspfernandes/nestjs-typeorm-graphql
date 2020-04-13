@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { Injectable } from '@nestjs/common'
 import { Repository, UpdateResult } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -6,6 +7,7 @@ import { Post } from './post.entity'
 import { PostMapper } from './post.mapper'
 import { PostInput } from './models/post.input'
 import { PostOutput } from './models/post.output'
+import { PostNotFoundException } from '../common/exception/post.not.found.exception'
 
 @Injectable()
 export class PostService {
@@ -36,7 +38,11 @@ export class PostService {
   async getPostById(postId: string): Promise<PostOutput> {
     const post = await this.postRepository.findOne(postId)
 
-    return this.postMapper.mapEntityToOutput(post!)
+    if (isNil(post)) {
+      throw new PostNotFoundException(postId)
+    }
+
+    return this.postMapper.mapEntityToOutput(post)
   }
 
   async getPostsByUserId(userId: string): Promise<PostOutput[]> {
