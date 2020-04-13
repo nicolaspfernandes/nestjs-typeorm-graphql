@@ -35,6 +35,12 @@ export class PostService {
     return this.postRepository.softDelete(postId)
   }
 
+  async getPosts(): Promise<PostOutput[]> {
+    const posts = await this.postRepository.find()
+
+    return posts.map(this.postMapper.mapEntityToOutput)
+  }
+
   async getPostById(postId: string): Promise<PostOutput> {
     const post = await this.postRepository.findOne(postId)
 

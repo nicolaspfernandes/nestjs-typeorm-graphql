@@ -32,6 +32,11 @@ export class PostResolver {
     return this.postService.getPostById(postId)
   }
 
+  @Query(returns => [PostOutput])
+  posts(): Promise<PostOutput[]> {
+    return this.postService.getPosts()
+  }
+
   @Mutation(returns => PostOutput)
   async savePost(
     @Args('userId', { type: () => ID }) userId: string,
