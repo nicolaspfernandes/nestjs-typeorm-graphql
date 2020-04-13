@@ -6,6 +6,8 @@ const { SERVER_PORT } = process.env
 
 ;(async function bootstrap() {
   const application = await NestFactory.create(AppModule)
+
+  application.enableCors()
   application.useGlobalPipes(new ValidationPipe())
 
   await application.listen(SERVER_PORT)
