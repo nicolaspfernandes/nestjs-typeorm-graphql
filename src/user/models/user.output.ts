@@ -19,6 +19,9 @@ export class UserOutput {
   @Field({ nullable: true })
   updatedAt?: Date
 
+  @Field({ nullable: true })
+  token?: string
+
   @Field(type => [PostOutput], { nullable: 'itemsAndList' })
   posts?: PostOutput[]
 }

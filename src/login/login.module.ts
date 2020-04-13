@@ -16,6 +16,7 @@ import { CryptoService } from '../common/service/crypto.service'
     CryptoService,
     ConfigService
   ],
-  imports: [TypeOrmModule.forFeature([Login])]
+  imports: [TypeOrmModule.forFeature([Login])],
+  exports: [LoginService]
 })
 export class LoginModule { }

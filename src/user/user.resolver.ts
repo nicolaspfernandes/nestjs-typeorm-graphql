@@ -7,6 +7,7 @@ import {
   Mutation,
   ResolveField
 } from '@nestjs/graphql'
+import { isObject } from 'lodash'
 
 import { UserService } from './user.service'
 import { UserInput } from './models/user.input'
@@ -14,12 +15,14 @@ import { UserOutput } from './models/user.output'
 
 import { PostService } from '../post/post.service'
 import { PostOutput } from '../post/models/post.output'
+import { LoginService } from '../login/login.service'
 
 @Resolver(UserOutput)
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
-    private readonly postService: PostService
+    private readonly postService: PostService,
+    private readonly loginService: LoginService
   ) { }
 
   @Query(returns => [UserOutput])
@@ -36,6 +39,13 @@ export class UserResolver {
         user.id,
         userInput.posts
       )
+    }
+
+    if (isObject(userInput.login)) {
+      user.token = await this.loginService.createLoginForUser({
+        userId: user.id,
+        ...userInput.login
+      })
     }
 
     return user
